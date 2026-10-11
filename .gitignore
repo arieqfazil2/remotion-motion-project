@@ -1,0 +1,9 @@
+node_modules/
+out/
+public/assets/*.mov
+public/assets/*.mp4
+
+# Keep generated media and local video assets out of GitHub
+*.mov
+*.mp4
+preview-frame.png

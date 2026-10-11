@@ -1,0 +1,15 @@
+{
+  "method": "FFmpeg select gt(scene,0.22), showinfo; candidates verified against representative frames",
+  "seconds": [
+    5.208333,
+    10.291667,
+    15.125,
+    19.916667,
+    25.208333,
+    30.833333,
+    36.541667,
+    41.958333,
+    49.875,
+    54.791667
+  ]
+}
