@@ -299,7 +299,7 @@ if (music) {
 }
 writeFileSync(
   join(out, "compare.html"),
-  `<!doctype html><meta charset="utf-8"><title>Before / After</title><style>body{font:18px Arial;background:#102e50;color:white;padding:40px}audio{display:block;margin:16px 0;width:90%}</style><h1>${analysisOnly ? "Proxy — analisis saja" : "Gabungan.mov — evaluasi audio"}</h1><p>Dengarkan pada volume perangkat yang sama. Perbedaan loudness bukan bukti noise hilang.</p><h2>Before</h2><audio controls src="before.wav"></audio><h2>After</h2><audio controls src="enhanced.wav"></audio><p>Periksa semua kata, suara rendah, sibilance, pumping, dan naturalitas. Untuk fallback, set audioSettings.useEnhanced=false di src/timing.ts.</p>`,
+  `<!doctype html><meta charset="utf-8"><title>Before / After</title><style>body{font:18px Arial;background:#102e50;color:white;padding:40px}audio{display:block;margin:16px 0;width:90%}</style><h1>${analysisOnly ? "Proxy — analisis saja" : "Gabungan.mov — evaluasi audio"}</h1><p>Dengarkan pada volume perangkat yang sama. Perbedaan loudness bukan bukti noise hilang.</p><h2>Before</h2><audio controls src="before.wav"></audio><h2>After</h2><audio controls src="enhanced.wav"></audio><p>Periksa semua kata, suara rendah, sibilance, pumping, dan naturalitas. Revisi TikTok saat ini selalu memakai audio MOV original. Hasil enhancement ini hanya untuk evaluasi dan tidak dirujuk UNESA-Promo.</p>`,
 );
 if (!analysisOnly) {
   const current = fingerprint(input);

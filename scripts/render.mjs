@@ -1,4 +1,3 @@
-import { refreshAudioState } from "./audio-state.mjs";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync } from "node:fs";
 if (!existsSync("public/assets/Gabungan.mov")) {
@@ -7,12 +6,17 @@ if (!existsSync("public/assets/Gabungan.mov")) {
   );
   process.exit(1);
 }
-// Always refresh metadata and stale-audio checks immediately before rendering.
+// Refresh original metadata before export; do not process or replace the MOV audio.
 const prepared = spawnSync(process.execPath, ["scripts/prepare.mjs"], {
   stdio: "inherit",
 });
 if (prepared.status !== 0) process.exit(prepared.status ?? 1);
-refreshAudioState();
+const captions = spawnSync(
+  process.execPath,
+  ["scripts/validate-captions.mjs"],
+  { stdio: "inherit" },
+);
+if (captions.status !== 0) process.exit(captions.status ?? 1);
 mkdirSync("out", { recursive: true });
 const result = spawnSync(
   process.platform === "win32" ? "npx.cmd" : "npx",

@@ -8,10 +8,16 @@
     "prepare-video": "node scripts/prepare.mjs",
     "render": "node scripts/render.mjs",
     "render:preview": "remotion render src/index.ts MotionPreview out/motion-preview.mp4 --codec=h264 --crf=16",
-    "enhance-audio": "node scripts/enhance-audio.mjs"
+    "enhance-audio": "node scripts/enhance-audio.mjs",
+    "import-captions": "node scripts/import-captions.mjs",
+    "extract-transcription-audio": "node scripts/extract-transcription-audio.mjs",
+    "check-captions": "node scripts/validate-captions.mjs",
+    "test": "node tests/motion-captions.test.mjs"
   },
   "dependencies": {
+    "@remotion/captions": "4.0.534",
     "@remotion/cli": "4.0.534",
+    "@remotion/effects": "4.0.534",
     "@remotion/media": "4.0.534",
     "@remotion/motion-blur": "4.0.534",
     "react": "19.2.3",

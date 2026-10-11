@@ -14,17 +14,19 @@ import {
   palette,
   motionSettings,
   softFlashCuts,
+  blurTransitions,
+  transitionSettings,
+  punchIns,
   type FootageCue,
 } from "./timing";
+import { blur } from "@remotion/effects/blur";
+import { zoomBlur } from "@remotion/effects/zoom-blur";
 import { Trail } from "@remotion/motion-blur";
 const clamp = {
   extrapolateLeft: "clamp" as const,
   extrapolateRight: "clamp" as const,
 };
-export const useFootageCamera = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const time = frame / fps;
+export const cameraAtTime = (time: number) => {
   const move = shotMotion.find((m) => time >= m.start && time < m.end);
   if (!move)
     return { scale: 1, translate: "0% 0%", transformOrigin: "50% 50%" };
@@ -33,8 +35,29 @@ export const useFootageCamera = () => {
     easing: Easing.bezier(0.42, 0, 0.58, 1),
   });
   const intensity = Math.max(0, Math.min(1.5, motionSettings.cameraIntensity));
-  const scale =
+  const baseScale =
     1 + (move.from + (move.to - move.from) * progress - 1) * intensity;
+  const punch = punchIns.find(
+    (p) => time >= p.start && time < p.start + p.duration,
+  );
+  const punchProgress = punch
+    ? interpolate(
+        time,
+        [
+          punch.start,
+          punch.start + punch.duration * 0.35,
+          punch.start + punch.duration,
+        ],
+        [0, 1, 0],
+        { ...clamp, easing: Easing.bezier(0.42, 0, 0.58, 1) },
+      )
+    : 0;
+  const scale = Math.min(
+    1.07,
+    baseScale +
+      punchProgress *
+        Math.max(0, Math.min(1.07, punch?.scale ?? baseScale) - baseScale),
+  );
   // Translation is always below the overscan margin on BOTH axes, including mid-shot.
   const margin = Math.max(0, (scale - 1) / 2) * 0.8;
   const bound = (v: number) => Math.max(-margin, Math.min(margin, v));
@@ -43,6 +66,11 @@ export const useFootageCamera = () => {
     translate: `${bound(move.panX * (progress - 0.5) * 2 * motionSettings.panIntensity) * 100}% ${bound(move.panY * (progress - 0.5) * 2 * motionSettings.panIntensity) * 100}%`,
     transformOrigin: "50% 50%",
   };
+};
+export const useFootageCamera = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  return cameraAtTime(frame / fps);
 };
 const FootageCard: React.FC<{ cue: FootageCue }> = ({ cue }) => {
   const f = useCurrentFrame();
@@ -55,7 +83,7 @@ const FootageCard: React.FC<{ cue: FootageCue }> = ({ cue }) => {
         position: "absolute",
         left: `${cue.x * 100}%`,
         top: `${cue.y * 100}%`,
-        width: "84%",
+        width: "76%",
         boxSizing: "border-box",
         padding: width * 0.025,
         color: palette.white,
@@ -81,7 +109,7 @@ const FootageCard: React.FC<{ cue: FootageCue }> = ({ cue }) => {
       <div
         style={{
           position: "relative",
-          fontSize: width * (portrait ? 0.022 : 0.012),
+          fontSize: width * (portrait ? 0.02 : 0.012),
           letterSpacing: interpolate(
             f,
             [0, 0.8 * fps],
@@ -98,7 +126,7 @@ const FootageCard: React.FC<{ cue: FootageCue }> = ({ cue }) => {
         style={{
           overflow: "hidden",
           position: "relative",
-          height: width * (portrait ? 0.061 : 0.032) * 1.14,
+          height: width * (portrait ? 0.045 : 0.032) * 1.14,
         }}
       >
         <Trail
@@ -113,7 +141,7 @@ const FootageCard: React.FC<{ cue: FootageCue }> = ({ cue }) => {
         <div
           style={{
             position: "relative",
-            fontSize: width * (portrait ? 0.034 : 0.018),
+            fontSize: width * (portrait ? 0.028 : 0.018),
             lineHeight: 1.3,
             marginTop: height * 0.006,
             opacity: interpolate(f, [0.3 * fps, 0.9 * fps], [0, 1], clamp),
@@ -173,14 +201,16 @@ const CutAccent: React.FC = () => {
     />
   );
 };
-export const FootageGraphics: React.FC = () => {
+export const FootageGraphics: React.FC<{ suppressCards?: boolean }> = ({
+  suppressCards = false,
+}) => {
   const { fps } = useVideoConfig();
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <Atmosphere />
       {/* All cards use one editable data template in timing.ts; no unverified speaker names. */}
       {footageCues
-        .filter((c) => c.enabled)
+        .filter((c) => c.enabled && !suppressCards)
         .map((c) => (
           <Sequence
             key={c.id}
@@ -319,7 +349,7 @@ const AnimatedHeading: React.FC<{ title: string }> = ({ title }) => {
   return (
     <div
       style={{
-        fontSize: width * (height > width ? 0.061 : 0.032),
+        fontSize: width * (height > width ? 0.045 : 0.032),
         fontWeight: 600,
         lineHeight: 1.13,
         letterSpacing: interpolate(
@@ -334,4 +364,44 @@ const AnimatedHeading: React.FC<{ title: string }> = ({ title }) => {
       {title}
     </div>
   );
+};
+
+// Only the footage receives blur; captions stay crisp. No duplicate media/audio layers.
+export const footageEffectsAtTime = (t: number, width: number) => {
+  const transition = transitionSettings.enabled
+    ? blurTransitions.find((b) => Math.abs(t - b.at) < b.duration / 2)
+    : null;
+  if (!transition) return [];
+  const amount =
+    interpolate(
+      t,
+      [
+        transition.at - transition.duration / 2,
+        transition.at,
+        transition.at + transition.duration / 2,
+      ],
+      [0, 1, 0],
+      { ...clamp, easing: Easing.bezier(0.42, 0, 0.58, 1) },
+    ) * Math.max(0, Math.min(1.5, transitionSettings.strength));
+  return transition.kind === "zoom"
+    ? [
+        zoomBlur({
+          amount: width * 0.016 * amount,
+          center: [0.5, 0.55],
+          samples: 16,
+        }),
+      ]
+    : [
+        blur({
+          radius: width * 0.008 * amount,
+          horizontal: true,
+          vertical: false,
+        }),
+      ];
+};
+
+export const useFootageEffects = () => {
+  const frame = useCurrentFrame();
+  const { fps, width } = useVideoConfig();
+  return footageEffectsAtTime(frame / fps, width);
 };

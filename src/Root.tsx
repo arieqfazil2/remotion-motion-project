@@ -9,20 +9,16 @@ import {
   staticFile,
   useCurrentFrame,
   useVideoConfig,
-  getStaticFiles,
 } from "remotion";
-import { Video, Audio } from "@remotion/media";
+import { Video } from "@remotion/media";
 import source from "./source.json";
-import audio from "./audio.json";
-import { FootageGraphics, useFootageCamera } from "./FootageMotion";
+import { Subtitles, useSubtitleBusy } from "./Subtitles";
 import {
-  opening,
-  closing,
-  logo,
-  palette,
-  audioSettings,
-  type Cue,
-} from "./timing";
+  FootageGraphics,
+  useFootageCamera,
+  useFootageEffects,
+} from "./FootageMotion";
+import { opening, closing, logo, palette, type Cue } from "./timing";
 
 const clamp = {
   extrapolateLeft: "clamp" as const,
@@ -120,18 +116,16 @@ export const Title: React.FC<{ cue: Cue }> = ({ cue }) => {
 export const Promo: React.FC = () => {
   const { fps } = useVideoConfig();
   const cameraStyle = useFootageCamera();
-  const enhanced =
-    source.available &&
-    audioSettings.useEnhanced &&
-    audio.available &&
-    getStaticFiles().some((file) => file.name === audio.path);
+  const effects = useFootageEffects();
+  const subtitlesBusy = useSubtitleBusy();
   return (
     <AbsoluteFill style={{ background: "#000" }}>
       {source.available ? (
         <Video
           src={staticFile("assets/Gabungan.mov")}
           premountFor={fps}
-          volume={enhanced ? 0 : 1}
+          volume={1}
+          effects={effects}
           style={{
             width: "100%",
             height: "100%",
@@ -153,11 +147,9 @@ export const Promo: React.FC = () => {
           prepare-video.
         </AbsoluteFill>
       )}
-      {enhanced && (
-        <Audio src={staticFile(audio.path)} premountFor={fps} volume={1} />
-      )}
-      <FootageGraphics />
-      {logo.enabled && (
+      <FootageGraphics suppressCards={subtitlesBusy} />
+      <Subtitles />
+      {logo.enabled && source.available && (
         <Img
           src={staticFile(logo.path)}
           style={{
@@ -239,8 +231,8 @@ export const Root: React.FC = () => (
     <Composition
       id="UNESA-Promo"
       component={Promo}
-      width={source.width}
-      height={source.height}
+      width={1080}
+      height={1920}
       fps={source.fps}
       durationInFrames={source.durationInFrames}
     />

@@ -1,3 +1,5 @@
+> **ARSIP — revisi TikTok soft/professional memakai satu audio MOV original. Enhanced audio tidak dirujuk komposisi final. Jangan menjalankan workflow ini untuk revisi terbaru. Hasil proxy sebelumnya bukan evaluasi MOV original.**
+
 # Audio enhancement lokal
 
 Proxy yang dilampirkan ulang identik (SHA-256 `79f081ebcda98f943b00b70e710b8532ea73624a2565883487b54091a0c7b250`) dengan analisis sebelumnya. Seluruh audio proxy didekode dan diproses. Tidak ada transkrip atau identifikasi sumber suara yang diklaim.

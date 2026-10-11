@@ -1,4 +1,3 @@
-import { refreshAudioState } from "./audio-state.mjs";
 import { execFileSync } from "node:child_process";
 import { existsSync, writeFileSync } from "node:fs";
 const file = "public/assets/Gabungan.mov";
@@ -40,7 +39,7 @@ const width = swap ? v.height : v.width,
 // Timings were authored against the full-length 9:16 proxy. Never read proxy as final source.
 if (
   Math.abs(duration - 61.416667) > 0.25 ||
-  Math.abs(width / height - 9 / 16) > 0.015
+  Math.abs(width / height - 9 / 16) > 0.001
 )
   throw new Error(
     "Durasi/aspek Gabungan.mov berbeda dari proxy. Cocokkan timeline asli sebelum mengaktifkan motion.",
@@ -50,8 +49,10 @@ writeFileSync(
   JSON.stringify(
     {
       available: true,
-      width,
-      height,
+      width: 1080,
+      height: 1920,
+      originalWidth: width,
+      originalHeight: height,
       fps,
       durationInFrames: Math.ceil(duration * fps),
       durationSeconds: duration,
@@ -69,7 +70,5 @@ console.log(
 );
 
 console.log(
-  refreshAudioState()
-    ? "Audio enhanced cocok dengan sumber asli dan diaktifkan."
-    : "Audio enhanced belum tersedia/cocok; gunakan audio MOV asli.",
+  "UNESA-Promo memakai satu track audio MOV original, tanpa enhancement.",
 );

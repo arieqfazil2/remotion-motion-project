@@ -58,8 +58,8 @@ export const footageCues: FootageCue[] = [
     duration: 4.1,
     title: "Program Magister (S2)",
     subtitle: "Universitas Negeri Surabaya",
-    x: 0.08,
-    y: 0.82,
+    x: 0.07,
+    y: 0.72,
   },
   {
     id: "Pascasarjana lower third",
@@ -68,8 +68,8 @@ export const footageCues: FootageCue[] = [
     duration: 4.3,
     title: "Pascasarjana",
     subtitle: "Universitas Negeri Surabaya",
-    x: 0.08,
-    y: 0.83,
+    x: 0.07,
+    y: 0.72,
   },
   {
     id: "Closing identity",
@@ -78,8 +78,8 @@ export const footageCues: FootageCue[] = [
     duration: 4.416667,
     title: "Program Magister (S2)",
     subtitle: "Universitas Negeri Surabaya",
-    x: 0.08,
-    y: 0.83,
+    x: 0.07,
+    y: 0.72,
   },
 ];
 // Edge accents preserve the existing cut and do not obscure the speaker.
@@ -92,42 +92,42 @@ export const motionSettings = {
   cameraIntensity: 1,
   panIntensity: 1,
   textBlur: true,
-  grainOpacity: 0.022,
-  edgeGlowOpacity: 0.065,
-  flashOpacity: 0.065,
-  ambientAccents: true,
+  grainOpacity: 0.01,
+  edgeGlowOpacity: 0.03,
+  flashOpacity: 0,
+  ambientAccents: false,
 };
-export const audioSettings = { useEnhanced: true }; // Missing/stale asset falls back to the MOV audio.
+export const audioSettings = { useEnhanced: false }; // UNESA-Promo ignores processed audio and plays the MOV track exactly once.
 export const shotMotion = [
-  { start: 0, end: 5.208333, from: 1.01, to: 1.035, panX: -0.003, panY: 0.003 },
+  { start: 0, end: 5.208333, from: 1.02, to: 1.04, panX: -0.003, panY: 0.003 },
   {
     start: 5.208333,
     end: 10.291667,
-    from: 1.016,
-    to: 1.048,
+    from: 1.02,
+    to: 1.045,
     panX: 0.006,
     panY: -0.004,
   },
   {
     start: 10.291667,
     end: 15.125,
-    from: 1.03,
-    to: 1.01,
+    from: 1.04,
+    to: 1.02,
     panX: -0.003,
     panY: 0,
   },
   {
     start: 15.125,
     end: 19.916667,
-    from: 1.01,
-    to: 1.03,
+    from: 1.02,
+    to: 1.04,
     panX: 0.003,
     panY: 0.002,
   },
   {
     start: 19.916667,
     end: 25.208333,
-    from: 1.015,
+    from: 1.02,
     to: 1.045,
     panX: 0.006,
     panY: -0.004,
@@ -135,50 +135,73 @@ export const shotMotion = [
   {
     start: 25.208333,
     end: 30.833333,
-    from: 1.044,
-    to: 1.014,
+    from: 1.045,
+    to: 1.02,
     panX: -0.005,
     panY: 0.003,
   },
   {
     start: 30.833333,
     end: 36.541667,
-    from: 1.01,
-    to: 1.032,
+    from: 1.02,
+    to: 1.04,
     panX: 0.003,
     panY: 0.002,
   },
   {
     start: 36.541667,
     end: 41.958333,
-    from: 1.031,
-    to: 1.012,
+    from: 1.04,
+    to: 1.02,
     panX: -0.003,
     panY: 0.002,
   },
   {
     start: 41.958333,
     end: 49.875,
-    from: 1.012,
-    to: 1.038,
+    from: 1.02,
+    to: 1.04,
     panX: 0.004,
     panY: -0.003,
   },
   {
     start: 49.875,
     end: 54.791667,
-    from: 1.028,
-    to: 1.01,
+    from: 1.04,
+    to: 1.02,
     panX: -0.002,
     panY: 0.002,
   },
   {
     start: 54.791667,
     end: 61.416667,
-    from: 1.012,
+    from: 1.02,
     to: 1.04,
     panX: 0.004,
     panY: 0.003,
   },
 ];
 export const softFlashCuts = [19.916667, 41.958333, 54.791667];
+
+export const subtitleSettings = {
+  enabled: true,
+  bottom: 0.2,
+  fontSizeRatio: 0.055,
+  highlight: "#F3C969",
+};
+// One visual punch follows the opening hand gesture verified at ~2s.
+// Add speech-emphasis punches only after checking original word timestamps.
+export const punchIns: { start: number; duration: number; scale: number }[] = [
+  { start: 1.75, duration: 1.25, scale: 1.055 },
+];
+export const blurTransitions: {
+  at: number;
+  duration: number;
+  kind: "directional" | "zoom";
+}[] = [
+  { at: 5.208333, duration: 0.22, kind: "zoom" },
+  { at: 19.916667, duration: 0.24, kind: "directional" },
+  { at: 41.958333, duration: 0.22, kind: "zoom" },
+  { at: 54.791667, duration: 0.2, kind: "directional" },
+];
+export const transitionSettings = { enabled: true, strength: 1 };

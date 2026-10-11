@@ -1,52 +1,64 @@
-# UNESA S2 — Remotion cinematic promotional video
+# UNESA S2 — TikTok soft / professional
 
-Project React + TypeScript yang dapat dibuka di VS Code. Revisi motion diterapkan langsung pada **UNESA-Promo** sepanjang 11 scene: zoom in/out dan pan halus, masking dan kinetic typography, animated lower third, text tracking/temporal motion trail, light sweep/glow, garis/shape bergerak, soft flash pada tiga cut, serta film grain lembut. Footage/urutan/durasi tetap dari video yang sudah diedit.
+Revisi project Remotion React + TypeScript yang sudah ada. Semua perubahan visual berada langsung pada **UNESA-Promo**: zoom natural di 11 scene, satu punch-in pada gestur opening, empat transisi blur singkat, subtitle dinamis dari transkrip, serta identity reveal/lower third yang tidak bertumpuk dengan subtitle. Footage, urutan scene, dan dialog tetap dari file yang telah diedit.
 
-Sumber final wajib **`public/assets/Gabungan.mov`**. Proxy hanya dipakai untuk analisis 61,416667 detik, 360×640, 24 FPS. Tidak ada proxy, video asli, audio besar, node_modules, atau hasil render dalam repository.
+Sumber final tetap **`public/assets/Gabungan.mov`** dan **satu track suara original dari Video tersebut**. Enhanced audio lama tidak diputar, meskipun file hasil enhancement masih ada di laptop. Tidak ada reverb, echo, pemrosesan ulang, atau musik baru dalam revisi ini.
 
-## Jalankan lokal
+## Buka di VS Code dan Studio
 
-Pasang Node.js 22+ dan FFmpeg/ffprobe pada PATH. Buka folder repository di VS Code, kemudian:
+Pasang Node.js 22+, FFmpeg dan ffprobe pada PATH. Unduh/checkout branch Pull Request, buka root repository di VS Code, lalu:
 
 ```bash
-npm install
-# Masukkan Gabungan.mov ke public/assets/ terlebih dahulu.
-npm run prepare-video
-npm run enhance-audio
+npm ci
+# Salin video original ke public/assets/Gabungan.mov
 npm run prepare-video
 npm run check
+npm test
 npm run studio
 ```
 
-Buka URL Studio yang dicetak di terminal dan pilih **UNESA-Promo**. Resolusi/display orientation, FPS, dan durasi komposisi dibaca dari MOV asli. Ukuran 1080×1920 dalam source awal adalah kanvas kerja sementara. Jika durasi/aspek berbeda dari proxy atau rotasi tidak standar, periksa timing/aspek dahulu; script tidak mengubah orientasi atau memotong file asli.
+Buka URL Studio yang dicetak, pilih **UNESA-Promo**. Export tetap **1080 × 1920**, menggunakan FPS dan seluruh durasi dari MOV original. `prepare-video` mencatat ukuran display original serta orientasi dari metadata tanpa mengubah file. Durasi dibulatkan ke atas ke frame terdekat (<1 frame). Perbedaan durasi/aspek terhadap proxy menghentikan persiapan agar timing diperiksa dahulu.
 
-Audio enhancement opsional. Untuk mengevaluasinya, buka `public/assets/audio/compare.html`: before/after, report, dan WAV bersih dibuat lokal. Default high-pass 70 Hz, noise reduction ringan 4 dB, EQ ±1 dB, compression 1,6:1, gain scene terbatas ±3 dB, target −19 LUFS / −2 dBTP. Proxy dan original dianalisis ulang secara terpisah; hasil proxy tidak dianggap identik dengan original.
+Tanpa MOV, komposisi menampilkan petunjuk memasukkan file; script render menolak export. `MotionPreview` adalah demo desain lama. Revisi ini tidak bergantung pada komposisi demo tersebut.
 
-`audioSettings.useEnhanced=true` memilih WAV yang tersedia dan cocok dengan manifest sumber. Audio MOV dibisukan saat WAV dimainkan, sehingga tidak terdengar dua kali. Tanpa WAV yang valid, komposisi memakai suara MOV asli. Set `useEnhanced=false` untuk fallback manual; jalankan prepare-video dan refresh Studio setelah perubahan file audio.
+## Subtitle dialog asli
 
-## Edit dan render
+**Transkrip belum tersedia; `src/captions.json` sengaja kosong.** Tidak ada subtitle percakapan rekaan. Sistem subtitle sudah terhubung ke komposisi final: font tebal putih, highlight emas pada kata aktif, shadow/outline, maksimal dua baris dan lima kata, animasi pop lembut, dan area aman bagian bawah.
 
-- `src/timing.ts`: timestamp teks, posisi, zoom/pan per shot, grain/glow/flash, motion blur, serta pilihan audio.
-- `scripts/audio-settings.json`: kekuatan noise reduction, EQ, compressor, normalisasi dan gain scene. Dengarkan seluruh A/B setelah perubahan.
-- `src/FootageMotion.tsx`: kamera dan efek sepanjang video. `src/Root.tsx`: komposisi final dan routing audio.
-- `MotionPreview` tetap demo desain lama; bukan hasil promosi final.
+Buat dan koreksi transkrip dari MOV original sesuai [panduan subtitle](docs/SUBTITLES.md). Import hanya setelah memeriksa teks/timestamp:
+
+```bash
+npm run extract-transcription-audio
+# Buat transkrip bahasa Indonesia dengan word timestamps menggunakan tool lokal.
+npm run import-captions -- out/transcription/original.json
+npm run check-captions
+```
+
+SRT biasa juga didukung, tetapi hanya timing per frasa: highlight per kata tidak diaktifkan jika timing kata tidak tersedia. Jangan menggunakan teks promosi sebagai pengganti dialog.
+
+## Edit dan render MP4
+
+- `src/timing.ts`: kamera per scene, punch-in, cut blur/durasi/intensitas, subtitle/font/posisi, identity cards, grain/glow, dan logo opsional.
+- `src/FootageMotion.tsx`: kamera, masked reveal, tracking, temporal text trail, accent line/light sweep, dan efek footage.
+- `src/Subtitles.tsx`, `src/caption-layout.ts`, `src/captions.json`: layout, highlight, grouping, serta data subtitle.
+- `src/Root.tsx`: komposisi final dengan satu Video/audio original.
 
 ```bash
 npm run render
 ```
 
-Hasil lokal: `out/UNESA-S2-motion.mp4` — H.264 CRF 16, yuv420p, AAC 320 kbps. Script mempersiapkan ulang metadata MOV dan memeriksa kecocokan WAV sebelum render. Simpan MOV/audio asli; export adalah encoding ulang, bukan salinan bit identik. Jika MOV HLG/HDR atau codec kurang kompatibel browser, periksa hasil warna/decoding secara lokal sebelum memilih workflow konversi. Tidak ada konversi sumber diam-diam.
+Hasil: `out/UNESA-S2-motion.mp4`, 1080×1920, H.264 CRF 16, yuv420p, AAC 320 kbps. Script membaca ulang metadata original, memvalidasi caption, kemudian merender. Audio original dienkode ulang satu kali dalam MP4, tanpa enhancement. Blur memakai efek resmi `@remotion/effects`; backend WebGL2 software `swangle` dipilih karena lulus render QA cloud. Rendering ini dapat lebih lambat daripada GPU.
 
-Logo resmi opsional: salin `public/assets/logo-unesa.png` dan aktifkan `logo.enabled`. Proporsi logo dijaga. Tidak ada logo rekaan.
+Logo resmi opsional: masukkan `public/assets/logo-unesa.png` dan aktifkan `logo.enabled` di timing. Logo dipertahankan proporsinya. Tidak ada logo terpisah dalam repo, dan tidak ada logo rekaan.
 
-## Dokumentasi dan batas pengujian
+## Dokumentasi dan pengujian
 
-- [Timestamp motion setiap scene](docs/MOTION-PLAN.md)
-- [Timeline frame proxy](docs/proxy-scene-timeline.jpg)
-- [Frame QA motion final](docs/final-motion-qc.jpg)
-- [Audio enhancement, A/B, fallback, dan ducking stem opsional](docs/AUDIO-ENHANCEMENT.md)
-- [Pengukuran dan pengujian proxy audio](docs/PROXY-AUDIO-REPORT.json)
+- [Timestamp kamera/grafis setiap scene](docs/MOTION-PLAN.md)
+- [Timeline proxy hasil analisis](docs/proxy-scene-timeline.jpg), [scene cuts](docs/scene-cuts.json)
+- [Subtitle dan transkripsi lokal](docs/SUBTITLES.md)
+- [QC revisi ini: terverifikasi dan belum diuji](docs/TIKTOK-QC.md)
+- [Contact sheet QA](docs/tiktok-motion-qc.jpg) — teks sintetis hanya untuk uji komponen, bukan transkrip.
 
-TypeScript/syntax dan 12 frame representatif telah diperiksa; pengujian audio penuh proxy menjaga jumlah sampel dan mengompensasi latency denoiser. Narasi/beat tidak ditranskripsikan atau diklaim terverifikasi. Musik yang menyatu dengan dialog tidak bisa diduck secara sempurna memakai filter biasa; tidak ada musik baru atau ducking track campuran.
+**MOV original tidak tersedia di cloud.** Full render original, decoding/warna HLG/HDR original, lip-sync, kecocokan transkrip dengan ucapan, dan kualitas MP4 akhir perlu diperiksa di VS Code lokal. Proxy hanya referensi visual/timing; tidak dirujuk sebagai sumber final. Video/audio besar, node_modules, dan hasil render tidak masuk GitHub.
 
-**Gabungan.mov original tidak tersedia di cloud. Full render original, warna/rotasi/codec original, lip-sync visual, naturalitas audio hasil original, dan playback MP4 akhir masih wajib diperiksa lokal.** Tonton seluruh video, periksa setiap kata/akhir kalimat, semua wajah/teks/logo, awal/akhir footage, kualitas suara serta volume antarscene sebelum menyerahkan UTS.
+Script dan [dokumen enhancement sebelumnya](docs/AUDIO-ENHANCEMENT.md) dipertahankan sebagai arsip. **Jangan jalankan enhance-audio untuk workflow revisi ini**; final mengabaikan track enhancement. Pengukuran audio proxy lama bukan bukti audio original atau revisi ini.
