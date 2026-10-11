@@ -1,0 +1,271 @@
+{
+  "analysisOnly": true,
+  "duration": 61.416667,
+  "denoiseLatencySamples": 1200,
+  "settings": {
+    "highpassHz": 70,
+    "noiseReductionDb": 4,
+    "noiseFloorDb": -45,
+    "lowMidGainDb": -1,
+    "presenceGainDb": 1,
+    "compressionThresholdDb": -20,
+    "compressionRatio": 1.6,
+    "targetLufs": -19,
+    "truePeakDb": -2,
+    "maxSceneGainDb": 3,
+    "sceneGainRampSeconds": 0.12,
+    "musicDuckDb": -6,
+    "speechWindows": [],
+    "sampleRate": 48000
+  },
+  "original": {
+    "input_i": "-23.06",
+    "input_tp": "-3.94",
+    "input_lra": "11.10",
+    "input_thresh": "-33.16",
+    "output_i": "-17.78",
+    "output_tp": "-2.00",
+    "output_lra": "9.30",
+    "output_thresh": "-27.81",
+    "normalization_type": "dynamic",
+    "target_offset": "-1.22"
+  },
+  "processed": {
+    "input_i": "-19.05",
+    "input_tp": "-2.00",
+    "input_lra": "5.80",
+    "input_thresh": "-29.05",
+    "output_i": "-19.00",
+    "output_tp": "-2.00",
+    "output_lra": "5.50",
+    "output_thresh": "-29.00",
+    "normalization_type": "dynamic",
+    "target_offset": "0.00"
+  },
+  "scenes": [
+    {
+      "start": 0,
+      "end": 5.208333,
+      "speechBandRmsDb": -30.1,
+      "gainDb": 0.8000000000000007
+    },
+    {
+      "start": 5.208333,
+      "end": 10.291667,
+      "speechBandRmsDb": -30.4,
+      "gainDb": 1.0999999999999979
+    },
+    {
+      "start": 10.291667,
+      "end": 15.125,
+      "speechBandRmsDb": -29.6,
+      "gainDb": 0.3000000000000007
+    },
+    {
+      "start": 15.125,
+      "end": 19.916667,
+      "speechBandRmsDb": -29.3,
+      "gainDb": 0
+    },
+    {
+      "start": 19.916667,
+      "end": 25.208333,
+      "speechBandRmsDb": -29.1,
+      "gainDb": -0.1999999999999993
+    },
+    {
+      "start": 25.208333,
+      "end": 30.833333,
+      "speechBandRmsDb": -34.5,
+      "gainDb": 3
+    },
+    {
+      "start": 30.833333,
+      "end": 36.541667,
+      "speechBandRmsDb": -25.8,
+      "gainDb": -3
+    },
+    {
+      "start": 36.541667,
+      "end": 41.958333,
+      "speechBandRmsDb": -21.3,
+      "gainDb": -3
+    },
+    {
+      "start": 41.958333,
+      "end": 49.875,
+      "speechBandRmsDb": -26.1,
+      "gainDb": -3
+    },
+    {
+      "start": 49.875,
+      "end": 54.791667,
+      "speechBandRmsDb": -28.3,
+      "gainDb": -1
+    },
+    {
+      "start": 54.791667,
+      "end": 61.416667,
+      "speechBandRmsDb": -30.4,
+      "gainDb": 1.0999999999999979
+    }
+  ],
+  "filter": "highpass=f=70,apad=pad_len=1200,afftdn=nr=4:nf=-45:tn=0,atrim=start_sample=1200,asetpts=N/SR/TB,equalizer=f=250:t=q:w=1:g=-1,equalizer=f=2800:t=q:w=1:g=1,volume='pow(10,(0.8000000000000007+(0.29999999999999716)*clip((t-5.148333)/0.12,0,1)+(-0.7999999999999972)*clip((t-10.231667)/0.12,0,1)+(-0.3000000000000007)*clip((t-15.065)/0.12,0,1)+(-0.1999999999999993)*clip((t-19.856667)/0.12,0,1)+(3.1999999999999993)*clip((t-25.148333)/0.12,0,1)+(-6)*clip((t-30.773333)/0.12,0,1)+(0)*clip((t-36.481666999999995)/0.12,0,1)+(0)*clip((t-41.898333)/0.12,0,1)+(2)*clip((t-49.815)/0.12,0,1)+(2.099999999999998)*clip((t-54.731666999999995)/0.12,0,1))/20)':eval=frame,acompressor=threshold=0.1:ratio=1.6:attack=20:release=180:makeup=1, loudnorm=I=-19:TP=-2:LRA=11:measured_I=-25.54:measured_TP=-6.98:measured_LRA=6.20:measured_thresh=-35.54:offset=-0.34:linear=true",
+  "notes": [
+    "Mixed track processed conservatively; no music/voice separation.",
+    "No time stretching, sample deletion, dialogue synthesis or gate.",
+    "Listen before/after: measurements do not establish naturalness or perfect denoising."
+  ],
+  "alignmentQC": {
+    "samplesBefore": 2948000,
+    "samplesAfter": 2948000,
+    "sampleRate": 48000,
+    "correlationWindows": [
+      {
+        "seconds": 2,
+        "estimatedLagMs": -0.020833333333333332
+      },
+      {
+        "seconds": 8,
+        "estimatedLagMs": -0.020833333333333332
+      },
+      {
+        "seconds": 12,
+        "estimatedLagMs": -0.020833333333333332
+      },
+      {
+        "seconds": 17,
+        "estimatedLagMs": -0.020833333333333332
+      },
+      {
+        "seconds": 23,
+        "estimatedLagMs": -0.020833333333333332
+      },
+      {
+        "seconds": 27,
+        "estimatedLagMs": -0.020833333333333332
+      },
+      {
+        "seconds": 34,
+        "estimatedLagMs": -0.22916666666666666
+      },
+      {
+        "seconds": 39,
+        "estimatedLagMs": -0.9791666666666666
+      },
+      {
+        "seconds": 46,
+        "estimatedLagMs": -1.5416666666666667
+      },
+      {
+        "seconds": 52,
+        "estimatedLagMs": -0.020833333333333332
+      },
+      {
+        "seconds": 59,
+        "estimatedLagMs": -0.020833333333333332
+      }
+    ]
+  },
+  "proxySceneFrequencyRms": [
+    {
+      "start": 0,
+      "end": 5.208333,
+      "rmsDb": {
+        "full": -29.2,
+        "below100": -38.1,
+        "above6000": -49.0
+      }
+    },
+    {
+      "start": 5.208333,
+      "end": 10.291667,
+      "rmsDb": {
+        "full": -28.2,
+        "below100": -33.7,
+        "above6000": -51.8
+      }
+    },
+    {
+      "start": 10.291667,
+      "end": 15.125,
+      "rmsDb": {
+        "full": -28.3,
+        "below100": -35.8,
+        "above6000": -50.3
+      }
+    },
+    {
+      "start": 15.125,
+      "end": 19.916667,
+      "rmsDb": {
+        "full": -28.1,
+        "below100": -35.8,
+        "above6000": -51.0
+      }
+    },
+    {
+      "start": 19.916667,
+      "end": 25.208333,
+      "rmsDb": {
+        "full": -28.8,
+        "below100": -43.1,
+        "above6000": -50.2
+      }
+    },
+    {
+      "start": 25.208333,
+      "end": 30.833333,
+      "rmsDb": {
+        "full": -34.3,
+        "below100": -51.3,
+        "above6000": -54.5
+      }
+    },
+    {
+      "start": 30.833333,
+      "end": 36.541667,
+      "rmsDb": {
+        "full": -24.1,
+        "below100": -30.4,
+        "above6000": -51.2
+      }
+    },
+    {
+      "start": 36.541667,
+      "end": 41.958333,
+      "rmsDb": {
+        "full": -18.4,
+        "below100": -22.4,
+        "above6000": -45.6
+      }
+    },
+    {
+      "start": 41.958333,
+      "end": 49.875,
+      "rmsDb": {
+        "full": -23.2,
+        "below100": -27.3,
+        "above6000": -44.4
+      }
+    },
+    {
+      "start": 49.875,
+      "end": 54.791667,
+      "rmsDb": {
+        "full": -27.4,
+        "below100": -35.9,
+        "above6000": -52.6
+      }
+    },
+    {
+      "start": 54.791667,
+      "end": 61.416667,
+      "rmsDb": {
+        "full": -29.4,
+        "below100": -38.4,
+        "above6000": -50.3
+      }
+    }
+  ]
+}

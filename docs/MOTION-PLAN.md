@@ -1,29 +1,31 @@
-# Analisis proxy dan rencana motion — S2 UNESA
+# Motion per scene — TikTok soft / professional
 
-Sumber yang benar-benar dapat dibuka: Gabungan-proxy.mp4, 9.593.926 byte. ffprobe: 61,416667 detik, 360×640, 24 FPS, 1.474 frame; H.264 High 10, HLG/BT.2020, AAC stereo 44.100 Hz. Ini metadata **proxy**, bukan resolusi/codec asli Gabungan.mov.
+Revisi ini diterapkan langsung ke **UNESA-Promo**. Referensi tetap `scene-cuts.json`, `proxy-scene-timeline.jpg`, dan Gabungan-proxy.mp4 yang telah diperiksa. Proxy: 61,416667 detik, 360×640, 24 FPS, 1.474 frame, H.264 High10 HLG/BT.2020 dan AAC stereo 44,1 kHz. Metadata proxy bukan metadata MOV original. Terdapat 10 cut / 11 scene; semua scene memuat manusia, sehingga tidak dianggap B-roll kampus kosong.
 
-FFmpeg mengekstrak overview setiap 2 detik dan frame representatif pada setiap shot. `proxy-scene-timeline.jpg` memuat timestamp frame. Deteksi `select='gt(scene,0.22)',showinfo` menghasilkan kandidat cut berikut; frame sebelum/sesudah dan overview dipakai untuk memeriksa pergantian lokasi/pembicara. Threshold adalah heuristik, bukan identifikasi semua gerakan kamera.
+Gerakan lebih terlihat, dengan easing cubic natural. Framing gedung yang lebih luas memakai zoom/pan sedikit lebih besar; close speaker lebih konservatif. Tidak ada parallax pemisahan depth palsu, warping orang, penggabungan ulang, atau penggantian footage. Seluruh scene tetap diputar dalam satu Video dari `public/assets/Gabungan.mov`.
 
-| Interval (detik) | Pengamatan visual | Motion yang diterapkan |
-|---|---|---|
-| 0–5,208333 | Perempuan berbaju hitam, gedung bertuliskan Pascasarjana Fakultas Ekonomika & Bisnis | Identitas program 0,6–4,7; mask reveal dan typography bertahap; zoom 1,012 |
-| 5,208333–10,291667 | Perempuan berhijab terang, halaman dengan signage | Zoom 1,016; aksen garis di cut |
-| 10,291667–15,125 | Laki-laki berkemeja abu-abu, pohon/gedung | Zoom 1,010; tanpa label nama |
-| 15,125–19,916667 | Perempuan berhijab gelap, baju marun, panel emas | Zoom 1,010; tanpa klaim tambahan |
-| 19,916667–25,208333 | Perempuan hitam di tangga | Zoom 1,016 berjangkar x43% y53%; aksen garis di cut |
-| 25,208333–30,833333 | Perempuan berhijab terang, depan gedung Pascasarjana | Lower third lokasi 25,6–29,9; zoom 1,012 |
-| 30,833333–36,541667 | Laki-laki di dekat pohon | Zoom 1,010; aksen cut |
-| 36,541667–41,958333 | Perempuan marun dekat signage gedung | Zoom 1,012; tanpa menutup signage dengan teks |
-| 41,958333–49,875 | Perempuan hitam di area pepohonan/halaman | Zoom 1,012; aksen cut |
-| 49,875–54,791667 | Laki-laki depan gedung | Zoom 1,010 |
-| 54,791667–61,416667 | Perempuan duduk di meja kuning dengan laptop | Zoom 1,014; penutup overlay 57–61,416667 |
+| Interval (detik) | Scene yang diperiksa | Kamera default | Motion / transisi |
+|---|---|---|---|
+| 0–5,208 | Perempuan hitam depan gedung Pascasarjana FEB | Push 1,02→1,04; pan kecil | Opening identity 0,6–4,7; masked reveal, tracking, text trail, sweep. Satu punch 1,055 pada gestur tangan ~2 detik, kembali smooth pada 3 detik |
+| 5,208–10,292 | Perempuan hijab terang di halaman/signage | Push 1,02→1,045; pan x/y | Zoom blur 0,22 detik di cut 5,208; accent line singkat |
+| 10,292–15,125 | Laki-laki abu-abu dekat pohon/gedung | Pull 1,04→1,02 | Fokus wajah/dialog; tanpa nama/jabatan rekaan |
+| 15,125–19,917 | Perempuan marun, panel emas | Push 1,02→1,04 | Glow tepi tipis; tanpa judul besar |
+| 19,917–25,208 | Perempuan hitam di tangga | Push 1,02→1,045; pan kecil | Directional horizontal blur 0,24 detik di cut; accent line |
+| 25,208–30,833 | Pembicara jauh depan gedung Pascasarjana | Pull 1,045→1,02; pan kecil | Lower third lokasi 25,6–29,9 “Pascasarjana / Universitas Negeri Surabaya” |
+| 30,833–36,542 | Laki-laki dekat pohon | Push 1,02→1,04 | Accent cut tipis; prioritas subtitle |
+| 36,542–41,958 | Perempuan marun dekat signage | Pull 1,04→1,02 | Gerak halus; tanpa teks menutupi signage/wajah |
+| 41,958–49,875 | Perempuan hitam di pepohonan/halaman | Push 1,02→1,04; pan kecil | Zoom blur 0,22 detik di cut; accent line |
+| 49,875–54,792 | Laki-laki depan gedung | Pull 1,04→1,02 | Subtitle/dialog menjadi fokus |
+| 54,792–61,417 | Perempuan duduk, meja kuning/laptop | Push 1,02→1,04; pan kecil | Directional blur 0,20 detik di cut; closing identity 57–akhir footage |
 
-Setiap camera move kembali ke skala netral sebelum cut. Tidak mengubah urutan, durasi, kecepatan, audio, atau transisi footage. Aksen cut hanya garis emas kecil di tepi bawah, bukan wipe layar. Lower thirds dan penutup ditempatkan di y82–83% agar berada di bawah area wajah dalam frame yang diperiksa; menutup sebagian badan/meja, bukan wajah. Teks lokasi diambil dari signage; tidak menambahkan nama/jabatan, akreditasi, biaya, fasilitas, atau klaim mutu.
+Blur terpusat pada cut, separuh interval sebelum dan sesudahnya. Enam cut lain tetap clean. Blur hanya memengaruhi footage, bukan subtitle; tidak memakai duplikasi Video atau audio. Zoom blur memakai 16 samples / maksimum amount 17,28 pada lebar 1080, directional blur radius maksimum 8,64; `transitionSettings.strength` mudah disesuaikan. Soft flash lama nonaktif (`flashOpacity=0`) agar tidak menumpuk efek.
 
-Audio dapat didekode oleh FFmpeg. Stream AAC berdurasi 61,345669 detik. `silencedetect=noise=-30dB:d=0.25` tidak menemukan interval hening. Tidak ada transkrip yang diberikan, alat transkripsi lokal tidak terpasang, dan belum dilakukan verifikasi isi ucapan/beat secara semantik. Karena itu teks bersifat identitas yang sudah disebut pengguna/signage, timing mengikuti shot dan bukan klaim sinkronisasi kata atau beat. Periksa narasi secara lokal sebelum penyerahan UTS.
+`shotMotion`, `punchIns`, `blurTransitions`, `motionSettings`, `subtitleSettings`, `footageCues`, dan `cutAccents` di `src/timing.ts` mengatur timing detik dan intensitas. Kamera dibatasi maksimum 1,07; pan maksimum 80% margin overscan pada dua sumbu. Center origin 50%/50%. Kamera berjalan sepanjang tiap scene tanpa membuka tepi kosong. Punch pada opening mengikuti gestur visual yang diperiksa, **bukan klaim penekanan kata/beat**. Tambah punch ucapan hanya sesudah memeriksa transkrip/audio original.
 
-Sumber final di UNESA-Promo tetap `staticFile('assets/Gabungan.mov')`, audio volume 1. Proxy dan salinan konversinya tidak dibundel atau dirujuk oleh komposisi final. `source.json` available=false: ukuran 1080×1920 adalah kanvas kerja usulan 9:16, FPS/durasi mengikuti proxy untuk menyiapkan timing. `npm run prepare-video` wajib membaca metadata asli saat file MOV tersedia. Jika durasi/aspek sumber berbeda dari proxy, skrip menghentikan persiapan untuk menghindari timing/crop yang salah.
+Subtitle berbasis dialog: putih tebal, kata aktif emas, shadow/outline, frasa ≤5 kata, ≤2 baris, scale pop .95→1. Posisi bawah 20%, kanan aman 17%. Timestamp highlight berasal dari import per kata; SRT per frasa tidak membuat timing kata buatan. Tidak ada transkrip tersedia, sehingga data produksi tetap kosong. [Panduan import](SUBTITLES.md).
 
-Warna navy/emas/putih dipertahankan dari desain sebelumnya dan selaras dengan gedung biru/panel emas pada proxy; bukan klaim pedoman warna resmi. Logo tidak tersedia sebagai aset terpisah, sehingga overlay logo tetap nonaktif; logo dalam footage tetap utuh.
+Identity cards kiri 7%, y72%, lebar76%, ukuran heading lebih ringkas daripada revisi lama. Cards disembunyikan ketika subtitle aktif (dengan buffer), agar judul dan dialog tidak bertumpuk. Grain 1%, glow 3%, aksen dekoratif kontinu nonaktif; sweep/glow kecil hanya pada panel/garis. Palet navy/emas/putih selaras footage, bukan klaim brand guide resmi. Logo terpisah belum tersedia; overlay tetap nonaktif. Tidak menambahkan akreditasi, biaya, fasilitas, nama pembicara atau klaim lain.
 
-Validasi implementasi: TypeScript lulus; frame QA 2, 27, dan 59 detik dirender dengan frame proxy hasil ekstraksi (bukan penggantian video final). Teks tidak menutup wajah pada tiga frame ini. Cut sebelum/sesudah diperiksa pada ±1 frame. Verifikasi sepanjang footage asli dan pemeriksaan narasi tetap dilakukan lokal.
+Audio revisi ini: **satu sumber original dari Video MOV volume 1**. Track enhancement sebelumnya tidak dirujuk atau diputar. Tidak ada pemrosesan ulang, musik baru, ducking, echo/reverb atau penghapusan dialog.
+
+Export 1080×1920; `prepare-video` membaca FPS/durasi MOV original dan memeriksa aspek/timing sesuai proxy. Seluruh footage dipertahankan; durasi quantized ke frame terdekat ke atas. File original/proxy tidak masuk GitHub. [Bukti dan batas QC](TIKTOK-QC.md).

@@ -7,3 +7,10 @@ public/assets/*.mp4
 *.mov
 *.mp4
 preview-frame.png
+
+# Local audio processing, comparisons and original metadata
+public/assets/audio/
+*.wav
+*.m4a
+*.mp3
+source-metadata.json
