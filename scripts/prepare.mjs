@@ -10,6 +10,8 @@ const [n,d]=rate.split('/').map(Number);const fps=n/d;
 const duration=Number(data.format.duration || v.duration);
 if(!Number.isFinite(fps)||fps<=0||!Number.isFinite(duration)||duration<=0) throw new Error('Metadata durasi/FPS tidak valid.');
 if((v.side_data_list||[]).some(s=>s.rotation&&s.rotation%180!==0)) throw new Error('Video memakai metadata rotasi. Normalisasi orientasi dahulu, lalu periksa resolusinya.');
+// Timings were authored against the full-length 9:16 proxy. Never read proxy as final source.
+if(Math.abs(duration-61.416667)>.25 || Math.abs(v.width/v.height-9/16)>.015) throw new Error('Durasi/aspek Gabungan.mov berbeda dari proxy. Cocokkan timeline asli sebelum mengaktifkan motion.');
 writeFileSync('src/source.json',JSON.stringify({available:true,width:v.width,height:v.height,fps,durationInFrames:Math.ceil(duration*fps),durationSeconds:duration},null,2));
 writeFileSync('source-metadata.json',JSON.stringify(data,null,2));
 console.log(`Metadata aktual: ${v.width}x${v.height}, ${fps} FPS, ${duration}s. Semua footage diputar sekali dari awal.`);

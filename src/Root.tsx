@@ -2,7 +2,8 @@ import React from 'react';
 import {AbsoluteFill, Composition, Easing, Img, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Video} from '@remotion/media';
 import source from './source.json';
-import {opening,lowerThird,closing,camera,logo,palette,type Cue} from './timing';
+import {FootageGraphics,useFootageCamera} from './FootageMotion';
+import {opening,closing,logo,palette,type Cue} from './timing';
 
 const clamp = {extrapolateLeft:'clamp' as const,extrapolateRight:'clamp' as const};
 export const Title: React.FC<{cue:Cue}> = ({cue}) => {
@@ -19,13 +20,11 @@ export const Title: React.FC<{cue:Cue}> = ({cue}) => {
  </div>;
 };
 export const Promo: React.FC = () => {
- const frame=useCurrentFrame(); const {fps}=useVideoConfig();
- const pulse=camera.enabled?interpolate(frame,[camera.start*fps,(camera.start+camera.end)/2*fps,camera.end*fps],[1,Math.min(1.04,camera.maxScale),1],{...clamp,easing:Easing.bezier(.42,0,.58,1)}):1;
+ const {fps}=useVideoConfig();
+ const cameraStyle=useFootageCamera();
  return <AbsoluteFill style={{background:'#000'}}>
- {source.available ? <Video src={staticFile('assets/Gabungan.mov')} premountFor={fps} volume={1} style={{width:'100%',height:'100%',objectFit:'contain',scale:pulse,transformOrigin:`${camera.originX}% ${camera.originY}%`}}/> : <AbsoluteFill style={{color:'white',alignItems:'center',justifyContent:'center',fontFamily:'Arial',fontSize:32}}>Masukkan public/assets/Gabungan.mov, lalu jalankan npm run prepare-video.</AbsoluteFill>}
- {opening.enabled&&<Sequence name="Opening typography" from={Math.round(opening.start*fps)} durationInFrames={Math.round(opening.duration*fps)} premountFor={fps}><Title cue={opening}/></Sequence>}
- {lowerThird.enabled&&lowerThird.title&&<Sequence name="Lower third" from={Math.round(lowerThird.start*fps)} durationInFrames={Math.round(lowerThird.duration*fps)} premountFor={fps}><Title cue={lowerThird}/></Sequence>}
- {closing.enabled&&<Sequence name="Closing overlay" from={Math.round(closing.start*fps)} durationInFrames={Math.round(closing.duration*fps)} premountFor={fps}><Title cue={closing}/></Sequence>}
+ {source.available ? <Video src={staticFile('assets/Gabungan.mov')} premountFor={fps} volume={1} style={{width:'100%',height:'100%',objectFit:'contain',...cameraStyle}}/> : <AbsoluteFill style={{color:'white',alignItems:'center',justifyContent:'center',fontFamily:'Arial',fontSize:32}}>Masukkan public/assets/Gabungan.mov, lalu jalankan npm run prepare-video.</AbsoluteFill>}
+ <FootageGraphics/>
  {logo.enabled&&<Img src={staticFile(logo.path)} style={{position:'absolute',right:'7%',top:'7%',width:'7%',height:'auto',objectFit:'contain'}}/>}
  </AbsoluteFill>;
 };
