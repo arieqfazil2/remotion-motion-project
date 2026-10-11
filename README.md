@@ -1,33 +1,52 @@
-# Motion graphics promosi S2 UNESA — fallback lokal
+# UNESA S2 — Remotion cinematic promotional video
 
-Gabungan.mov tetap perlu dimasukkan lokal. Gabungan-proxy.mp4 berhasil dianalisis: 61,416667 detik, vertikal 360×640, 24 FPS, audio AAC stereo. Motion pada UNESA-Promo kini mengikuti scene proxy; lihat [rencana timestamp dan batas analisis](docs/MOTION-PLAN.md) dan [timeline visual](docs/proxy-scene-timeline.jpg). Proxy hanya untuk analisis dan tidak dipakai sebagai sumber final. Kanvas sementara 1080×1920 mengikuti aspek proxy, bukan metadata asli. MotionPreview tetap demonstrasi desain 12 detik sebelumnya.
+Project React + TypeScript yang dapat dibuka di VS Code. Revisi motion diterapkan langsung pada **UNESA-Promo** sepanjang 11 scene: zoom in/out dan pan halus, masking dan kinetic typography, animated lower third, text tracking/temporal motion trail, light sweep/glow, garis/shape bergerak, soft flash pada tiga cut, serta film grain lembut. Footage/urutan/durasi tetap dari video yang sudah diedit.
 
-## Jalankan di VS Code
+Sumber final wajib **`public/assets/Gabungan.mov`**. Proxy hanya dipakai untuk analisis 61,416667 detik, 360×640, 24 FPS. Tidak ada proxy, video asli, audio besar, node_modules, atau hasil render dalam repository.
 
-1. Buka folder project ini di VS Code. Pasang Node.js 22+ dan FFmpeg (termasuk ffprobe).
-2. Jalankan `npm install`.
-3. Salin **video asli**, tanpa dipotong atau digabung ulang, ke `public/assets/Gabungan.mov`.
-4. Jalankan `npm run prepare-video`. Metadata aktual dibaca melalui ffprobe; `src/source.json` dan `source-metadata.json` diperbarui. Durasi komposisi mengikuti seluruh sumber, dibulatkan ke frame terakhir.
-5. Jalankan `npm run studio`; buka URL yang dicetak di terminal. Pilih **UNESA-Promo** untuk footage asli atau **MotionPreview** untuk demonstrasi grafis.
-6. Tinjau seluruh footage dan isi `src/timing.ts`. Cue berbasis proxy di `footageCues`, `cameraMoves`, dan `cutAccents` sudah aktif. Timing dalam detik; tinjau ulang kecocokan dengan MOV asli. Opening/lowerThird/closing lama hanya untuk kompatibilitas demo, bukan kontrol komposisi final. Isi lower third dengan nama/jabatan yang benar-benar disebut dalam video. Kosongkan bila tidak terverifikasi.
-7. Jalankan `npm run check`, lalu `npm run render`. Hasil: `out/UNESA-S2-motion.mp4` (H.264 CRF 16, AAC 320 kbps, resolusi/FPS sumber).
+## Jalankan lokal
 
-## Timing dan visual
+Pasang Node.js 22+ dan FFmpeg/ffprobe pada PATH. Buka folder repository di VS Code, kemudian:
 
-`start` / `duration` menggunakan detik. `x` / `y` posisi relatif terhadap ukuran video. Opening/closing berisi hanya identitas program dari permintaan pengguna; teks ini belum dicocokkan dengan narasi. Warna navy, emas, putih adalah usulan visual sementara, bukan klaim panduan brand resmi UNESA. Sesuaikan dengan footage dan pedoman resmi jika tersedia.
+```bash
+npm install
+# Masukkan Gabungan.mov ke public/assets/ terlebih dahulu.
+npm run prepare-video
+npm run enhance-audio
+npm run prepare-video
+npm run check
+npm run studio
+```
 
-Zoom final menggunakan `cameraMoves` sebesar 1,010–1,016, kembali ke skala 1 sebelum cut. `start/end` mengatur interval per shot. Periksa supaya gerakan hanya berada di dalam satu scene dan tidak memotong wajah, logo, atau teks bawaan. Nol perubahan kecepatan, trimming, pengurutan, musik tambahan, atau voice-over baru. Sumber video diputar sekali dengan audio volume 1; ekspor MP4 melakukan encoding ulang sehingga audio mempertahankan isi, bukan identik bit demi bit.
+Buka URL Studio yang dicetak di terminal dan pilih **UNESA-Promo**. Resolusi/display orientation, FPS, dan durasi komposisi dibaca dari MOV asli. Ukuran 1080×1920 dalam source awal adalah kanvas kerja sementara. Jika durasi/aspek berbeda dari proxy atau rotasi tidak standar, periksa timing/aspek dahulu; script tidak mengubah orientasi atau memotong file asli.
 
-Panel teks memiliki fade dan pergerakan vertikal halus, garis emas, glow lembut, dan light sweep pada garis. Tidak ada transisi tambahan yang menutupi pergantian scene. Closing adalah overlay di dalam durasi asli; atur start agar tidak memperpanjang video. Gunakan cue setelah jeda narasi dan periksa beat dengan mendengarkan sumber. Posisi default tidak menjamin aman dari wajah; pindahkan sesuai hasil pemeriksaan.
+Audio enhancement opsional. Untuk mengevaluasinya, buka `public/assets/audio/compare.html`: before/after, report, dan WAV bersih dibuat lokal. Default high-pass 70 Hz, noise reduction ringan 4 dB, EQ ±1 dB, compression 1,6:1, gain scene terbatas ±3 dB, target −19 LUFS / −2 dBTP. Proxy dan original dianalisis ulang secara terpisah; hasil proxy tidak dianggap identik dengan original.
 
-Logo opsional memakai aset resmi `public/assets/logo-unesa.png` dengan lebar proporsional dan tinggi otomatis; aktifkan `logo.enabled` hanya bila aset tersedia. Tidak ada logo yang digambar ulang.
+`audioSettings.useEnhanced=true` memilih WAV yang tersedia dan cocok dengan manifest sumber. Audio MOV dibisukan saat WAV dimainkan, sehingga tidak terdengar dua kali. Tanpa WAV yang valid, komposisi memakai suara MOV asli. Set `useEnhanced=false` untuk fallback manual; jalankan prepare-video dan refresh Studio setelah perubahan file audio.
 
-## Pemeriksaan sebelum UTS
+## Edit dan render
 
-- Tonton seluruh UNESA-Promo: awal/akhir lengkap, semua dialog dan audio terdengar, tidak ada duplikasi audio.
-- Pastikan setiap teks mengikuti narasi, tidak menutup wajah atau teks bawaan, terbaca pada ukuran layar ponsel, dan tidak terpotong.
-- Pastikan cue berakhir sebelum durasi sumber dan penutup tidak menabrak ending yang sudah ada.
-- Periksa metadata resolusi/FPS/durasi hasil dengan ffprobe dan tonton MP4 sampai selesai.
-- MOV dengan codec yang tidak dapat diputar browser perlu salinan kompatibel H.264/AAC. Jangan mengganti sumber diam-diam: simpan asli, periksa durasi/orientasi/audio salinan, lalu ubah referensi sumber dan skrip metadata secara eksplisit.
+- `src/timing.ts`: timestamp teks, posisi, zoom/pan per shot, grain/glow/flash, motion blur, serta pilihan audio.
+- `scripts/audio-settings.json`: kekuatan noise reduction, EQ, compressor, normalisasi dan gain scene. Dengarkan seluruh A/B setelah perubahan.
+- `src/FootageMotion.tsx`: kamera dan efek sepanjang video. `src/Root.tsx`: komposisi final dan routing audio.
+- `MotionPreview` tetap demo desain lama; bukan hasil promosi final.
 
-`npm run render:preview` menghasilkan demonstrasi desain 12 detik tanpa footage/audio asli. Demonstrasi ini **bukan hasil akhir promosi**. Tanpa Gabungan.mov, hasil MP4 promosi dan sinkronisasi narasi belum dapat diselesaikan.
+```bash
+npm run render
+```
+
+Hasil lokal: `out/UNESA-S2-motion.mp4` — H.264 CRF 16, yuv420p, AAC 320 kbps. Script mempersiapkan ulang metadata MOV dan memeriksa kecocokan WAV sebelum render. Simpan MOV/audio asli; export adalah encoding ulang, bukan salinan bit identik. Jika MOV HLG/HDR atau codec kurang kompatibel browser, periksa hasil warna/decoding secara lokal sebelum memilih workflow konversi. Tidak ada konversi sumber diam-diam.
+
+Logo resmi opsional: salin `public/assets/logo-unesa.png` dan aktifkan `logo.enabled`. Proporsi logo dijaga. Tidak ada logo rekaan.
+
+## Dokumentasi dan batas pengujian
+
+- [Timestamp motion setiap scene](docs/MOTION-PLAN.md)
+- [Timeline frame proxy](docs/proxy-scene-timeline.jpg)
+- [Frame QA motion final](docs/final-motion-qc.jpg)
+- [Audio enhancement, A/B, fallback, dan ducking stem opsional](docs/AUDIO-ENHANCEMENT.md)
+- [Pengukuran dan pengujian proxy audio](docs/PROXY-AUDIO-REPORT.json)
+
+TypeScript/syntax dan 12 frame representatif telah diperiksa; pengujian audio penuh proxy menjaga jumlah sampel dan mengompensasi latency denoiser. Narasi/beat tidak ditranskripsikan atau diklaim terverifikasi. Musik yang menyatu dengan dialog tidak bisa diduck secara sempurna memakai filter biasa; tidak ada musik baru atau ducking track campuran.
+
+**Gabungan.mov original tidak tersedia di cloud. Full render original, warna/rotasi/codec original, lip-sync visual, naturalitas audio hasil original, dan playback MP4 akhir masih wajib diperiksa lokal.** Tonton seluruh video, periksa setiap kata/akhir kalimat, semua wajah/teks/logo, awal/akhir footage, kualitas suara serta volume antarscene sebelum menyerahkan UTS.

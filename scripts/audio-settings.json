@@ -1,0 +1,16 @@
+{
+  "highpassHz": 70,
+  "noiseReductionDb": 4,
+  "noiseFloorDb": -45,
+  "lowMidGainDb": -1,
+  "presenceGainDb": 1,
+  "compressionThresholdDb": -20,
+  "compressionRatio": 1.6,
+  "targetLufs": -19,
+  "truePeakDb": -2,
+  "maxSceneGainDb": 3,
+  "sceneGainRampSeconds": 0.12,
+  "musicDuckDb": -6,
+  "speechWindows": [],
+  "sampleRate": 48000
+}
